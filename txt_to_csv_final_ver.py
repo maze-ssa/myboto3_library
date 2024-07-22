@@ -14,6 +14,8 @@ def lambda_handler(event, context):
     # Process each object
     for obj in objects['Contents']:
         key = obj['Key']
+        if key.endswith('/'):  # Skip directories
+            continue
         file_name = key.split('/')[-1]
 
         # Read the file from S3
@@ -27,12 +29,13 @@ def lambda_handler(event, context):
         rows.insert(0, ['PackageName', 'AvailabeVersion', 'Repository'])
 
         # Write the output to a new file
+        output_file_name = file_name + '.csv'  # Add .csv extension
         with open('/tmp/output.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(rows)
 
         # Upload the output file to S3
-        s3.put_object(Body=open('/tmp/output.csv', 'rb'), Bucket=bucket_name, Key=output_prefix + file_name)
+        s3.put_object(Body=open('/tmp/output.csv', 'rb'), Bucket=bucket_name, Key=output_prefix + output_file_name)
 
     return {
         'statusCode': 200,
