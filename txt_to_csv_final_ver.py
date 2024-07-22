@@ -26,7 +26,7 @@ def lambda_handler(event, context):
         rows = [line.split() for line in file_content.splitlines()]
 
         # Add the header row
-        rows.insert(0, ['PackageName', 'AvailabeVersion', 'Repository'])
+        rows.insert(0, ['Instance-ID', 'PackageName', 'AvailabeVersion', 'Repository'])
 
         # Write the output to a new file
         output_file_name = file_name + '.csv'  # Add .csv extension
