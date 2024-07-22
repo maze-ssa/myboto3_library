@@ -1,0 +1,6 @@
+echo !/bin/bash
+echo "########################"
+Server Name: echo $HOSTNAME
+echo "########################"
+yum list updates | awk '{print $1,$2,$3}' | column -t | tail -n +6 > $(hostname)$(date +'%Y-%m-%d').txt
+aws s3 cp "$(hostname)$(date +'%Y-%m-%d').txt" s3://patchupdatebucket19072024/raw/
