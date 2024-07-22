@@ -23,10 +23,16 @@ def lambda_handler(event, context):
         file_content = response['Body'].read().decode('utf-8')
 
         # Parse the file content
-        rows = [line.split() for line in file_content.splitlines()]
+        rows = []
+        instance_id = 'i-0e38320c944ca2216'  # Assuming instance ID
+        for line in file_content.splitlines():
+            columns = line.split()  # Split by any whitespace
+            if len(columns) >= 3:  # Check if there are at least 3 columns
+                columns[0] = instance_id  # Replace the first column with the instance ID
+                rows.append(columns)
 
         # Add the header row
-        rows.insert(0, ['Instance-ID', 'PackageName', 'AvailabeVersion', 'Repository'])
+        rows.insert(0, ['Name', 'PackageName', 'AvailabeVersion', 'Repository'])
 
         # Write the output to a new file
         output_file_name = file_name + '.csv'  # Add .csv extension
