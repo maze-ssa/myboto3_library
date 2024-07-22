@@ -1,6 +1,4 @@
 echo !/bin/bash
-echo "########################"
-Server Name: echo $HOSTNAME
-echo "########################"
-yum list updates | awk '{print $1,$2,$3}' | column -t | tail -n +6 > $(hostname)$(date +'%Y-%m-%d').txt
+INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
+yum list updates | awk -v instance_id=$INSTANCE_ID '{print instance_id, $1, $2, $3}' | column -t | tail -n +6
 aws s3 cp "$(hostname)$(date +'%Y-%m-%d').txt" s3://patchupdatebucket19072024/raw/
