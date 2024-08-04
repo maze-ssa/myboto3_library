@@ -1,5 +1,6 @@
 import boto3
 import csv
+import os
 
 s3 = boto3.client('s3')
 
@@ -35,7 +36,7 @@ def lambda_handler(event, context):
         rows.insert(0, ['Name', 'PackageName', 'AvailabeVersion', 'Repository'])
 
         # Write the output to a new file
-        output_file_name = file_name + '.csv'  # Add .csv extension
+        output_file_name = os.path.splitext(file_name)[0] + '.csv'
         with open('/tmp/output.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(rows)
